@@ -840,7 +840,8 @@ if __name__ == "__main__":
     port_env = os.getenv("PORT")
     port = int(port_env) if port_env else None
     server_name = os.getenv("GRADIO_SERVER_NAME", "0.0.0.0")
-    print(f"Starting Indian Stock Advisor on {server_name}:{port or 'dynamic'} ...", flush=True)
+    share_flag = os.getenv("GRADIO_SHARE", "True").lower() in ("true", "1", "yes")
+    print(f"Starting Indian Stock Advisor on {server_name}:{port or 'dynamic'} (share={share_flag}) ...", flush=True)
     demo.queue()
     try:
         demo.launch(
@@ -848,6 +849,7 @@ if __name__ == "__main__":
             server_port=port,
             theme=cyber_theme,
             css=custom_css,
+            share=share_flag,
             show_error=True
         )
     except OSError:
@@ -855,5 +857,6 @@ if __name__ == "__main__":
             server_name=server_name,
             theme=cyber_theme,
             css=custom_css,
+            share=share_flag,
             show_error=True
         )
