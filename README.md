@@ -152,7 +152,8 @@ $$\text{Return20D\_pct} = \left(\frac{\text{Base}_t - \text{Base}_{t-20}}{\text{
 
 ### 1. Clone or Navigate to Directory
 ```bash
-cd "c:\Users\shaik\OneDrive\Desktop\ai for finance"
+git clone https://github.com/muktheswar-reddy/ai-for-finance.git
+cd ai-for-finance
 ```
 
 ### 2. Install Dependencies
@@ -197,7 +198,7 @@ The project includes ready-to-deploy configuration for [Render](https://render.c
 
 ### Option B: Manual Web Service Setup
 1. In Render Dashboard, click **New +** -> **Web Service**.
-2. Connect your GitHub repository: `https://github.com/shaikmohammadshahid2006-boop/ai-for-finance`.
+2. Connect your GitHub repository: `https://github.com/muktheswar-reddy/ai-for-finance`.
 3. Configure the following parameters:
    - **Name**: `indian-stock-advisor`
    - **Language / Runtime**: `Python`

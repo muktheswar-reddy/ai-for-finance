@@ -1,115 +1,429 @@
-/* Indian Stock Advisor - Modern Fintech Styling */
+/* ==========================================================================
+   AI FOR FINANCE - NEXT-GEN FINTECH TERMINAL STYLESHEET
+   High-Frequency Trading & AI Intelligence Dark Horizon Aesthetic
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary-color: #3b82f6;
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
-  --bg-dark: #090d16;
-  --card-dark: #111827;
-  --border-color: #1f293d;
+  --bg-space: #070a12;
+  --bg-surface: #0c1220;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --border-subtle: rgba(56, 189, 248, 0.15);
+  --border-glow: rgba(99, 102, 241, 0.35);
+  
+  /* Vibrant Neon Accents */
+  --neon-cyan: #00f2fe;
+  --neon-emerald: #00f5a0;
+  --neon-amber: #f59e0b;
+  --neon-coral: #ff3366;
+  --neon-indigo: #6366f1;
+  --neon-violet: #8b5cf6;
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
 }
 
+/* Container & Typography */
 .gradio-container {
-  max-width: 1400px !important;
+  max-width: 1480px !important;
   margin: 0 auto !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  background-color: var(--bg-space) !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  color: var(--text-main) !important;
+  padding: 18px 24px !important;
 }
 
-.header-banner {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-  border: 1px solid #312e81;
-  border-radius: 12px;
+/* Terminal Header Banner */
+.terminal-header {
+  background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.18) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.15) 0%, transparent 45%),
+              linear-gradient(135deg, #090e1a 0%, #0d1527 50%, #0a1122 100%);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 16px;
   padding: 24px 32px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-bottom: 24px;
+  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.7), 0 0 24px rgba(99, 102, 241, 0.15);
+  position: relative;
+  overflow: hidden;
 }
 
-.header-title {
-  color: #f8fafc;
-  font-size: 28px;
+.terminal-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-indigo), var(--neon-emerald), transparent);
+}
+
+.terminal-pill-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.terminal-pill {
+  font-size: 11px;
   font-weight: 700;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.5px;
-}
-
-.header-subtitle {
-  color: #94a3b8;
-  font-size: 15px;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.stat-card {
-  background: #111827;
-  border: 1px solid #1f293d;
-  border-radius: 10px;
-  padding: 16px 20px;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 26px;
-  font-weight: 700;
-  color: #f8fafc;
-  margin-bottom: 4px;
-}
-
-.stat-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.8px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.badge-buy {
-  background-color: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  padding: 3px 10px;
-  border-radius: 9999px;
-  font-weight: 600;
+.terminal-pill.live {
+  background: rgba(0, 245, 160, 0.12);
+  border-color: rgba(0, 245, 160, 0.4);
+  color: #00f5a0;
+}
+
+.terminal-pill.live .dot {
+  width: 6px;
+  height: 6px;
+  background-color: #00f5a0;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00f5a0;
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.terminal-title {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #ffffff 20%, #38bdf8 60%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.terminal-subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 950px;
+}
+
+/* Glassmorphism Stat Metric Cards */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.kpi-card {
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  border-radius: 14px;
+  padding: 18px 22px;
+  text-align: left;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.kpi-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.kpi-total::after { background: linear-gradient(180deg, #38bdf8, #818cf8); }
+.kpi-buy::after { background: linear-gradient(180deg, #00f5a0, #059669); }
+.kpi-hold::after { background: linear-gradient(180deg, #f59e0b, #d97706); }
+.kpi-sell::after { background: linear-gradient(180deg, #ff3366, #dc2626); }
+
+.kpi-label {
   font-size: 12px;
-  display: inline-block;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #f8fafc;
+}
+
+.kpi-buy .kpi-val { color: #00f5a0; text-shadow: 0 0 16px rgba(0, 245, 160, 0.35); }
+.kpi-hold .kpi-val { color: #fbbf24; text-shadow: 0 0 16px rgba(245, 158, 11, 0.35); }
+.kpi-sell .kpi-val { color: #ff4d6d; text-shadow: 0 0 16px rgba(255, 51, 102, 0.35); }
+.kpi-total .kpi-val { color: #38bdf8; text-shadow: 0 0 16px rgba(56, 189, 248, 0.35); }
+
+/* Custom Verdict Badges */
+.badge-buy {
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.15), rgba(5, 150, 105, 0.25));
+  color: #00f5a0;
+  border: 1px solid rgba(0, 245, 160, 0.45);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 14px rgba(0, 245, 160, 0.2);
 }
 
 .badge-sell {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  padding: 3px 10px;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 12px;
-  display: inline-block;
+  background: linear-gradient(135deg, rgba(255, 51, 102, 0.15), rgba(220, 38, 38, 0.25));
+  color: #ff4d6d;
+  border: 1px solid rgba(255, 51, 102, 0.45);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 14px rgba(255, 51, 102, 0.2);
 }
 
 .badge-hold {
-  background-color: rgba(245, 158, 11, 0.15);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.25));
   color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  padding: 3px 10px;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 12px;
-  display: inline-block;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
 }
 
-/* Button styles */
-.action-button-primary {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
-  color: white !important;
-  font-weight: 600 !important;
+/* ==========================================================================
+   BUTTON TRANSFORMATIONS (RADICALLY DIFFERENT PALETTES & MICRO-INTERACTIONS)
+   ========================================================================== */
+
+/* 1. Primary Action Button (Electric Cyan - Neo Indigo Pulse) */
+button.btn-scan-primary,
+button.primary-cyan {
+  background: linear-gradient(135deg, #00f2fe 0%, #0284c7 60%, #4f46e5 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
   border: none !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+  border-radius: 10px !important;
+  padding: 12px 24px !important;
+  box-shadow: 0 4px 20px rgba(0, 242, 254, 0.35) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
 }
 
-.action-button-success {
-  background: linear-gradient(135deg, #059669, #047857) !important;
-  color: white !important;
+button.btn-scan-primary:hover,
+button.primary-cyan:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 6px 26px rgba(0, 242, 254, 0.55) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* 2. Secondary Re-Scan Button (Frosted Electric Violet) */
+button.btn-rescan-secondary,
+button.secondary-violet {
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(49, 46, 129, 0.8) 100%) !important;
+  color: #c7d2fe !important;
   font-weight: 600 !important;
-  border: none !important;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
+  font-size: 14px !important;
+  border: 1px solid #818cf8 !important;
+  border-radius: 10px !important;
+  padding: 12px 20px !important;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25) !important;
+  transition: all 0.25s ease !important;
 }
 
+button.btn-rescan-secondary:hover,
+button.secondary-violet:hover {
+  background: linear-gradient(135deg, rgba(49, 46, 129, 0.95) 0%, rgba(67, 56, 202, 0.95) 100%) !important;
+  color: #ffffff !important;
+  border-color: #a5b4fc !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 22px rgba(129, 140, 248, 0.45) !important;
+}
+
+/* 3. Amber Gold Chart Render Button */
+button.btn-chart-amber,
+button.action-amber {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 12px 22px !important;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35) !important;
+  transition: all 0.25s ease !important;
+}
+
+button.btn-chart-amber:hover,
+button.action-amber:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.55) !important;
+  filter: brightness(1.08) !important;
+}
+
+/* 4. Emerald AI Analyst Button */
+button.btn-ai-emerald,
+button.action-emerald {
+  background: linear-gradient(135deg, #059669 0%, #10b981 50%, #06b6d4 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 12px 24px !important;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35) !important;
+  transition: all 0.25s ease !important;
+}
+
+button.btn-ai-emerald:hover,
+button.action-emerald:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 26px rgba(16, 185, 129, 0.55) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* 5. Cyber Crimson Danger/Reset Button */
+button.btn-reset-danger,
+button.action-crimson {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  border: 1px solid rgba(244, 63, 94, 0.4) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.3) !important;
+  transition: all 0.25s ease !important;
+}
+
+button.btn-reset-danger:hover,
+button.action-crimson:hover {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+  box-shadow: 0 6px 22px rgba(244, 63, 94, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 6. Quick-Ticker Launcher Buttons */
+.quick-ticker-btn {
+  background: rgba(30, 41, 59, 0.6) !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  color: #38bdf8 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.quick-ticker-btn:hover {
+  background: rgba(56, 189, 248, 0.15) !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3) !important;
+}
+
+/* Form inputs & panels */
+input, textarea, select {
+  background-color: #0a0f1d !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  border-radius: 8px !important;
+  color: #f8fafc !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--neon-cyan) !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.25) !important;
+}
+
+/* Gradio Tabs Styling */
+.tabs {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15) !important;
+}
+
+button.tab-nav {
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  color: #94a3b8 !important;
+  padding: 10px 18px !important;
+  transition: all 0.2s ease !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+
+button.tab-nav.selected {
+  color: var(--neon-cyan) !important;
+  border-bottom: 2px solid var(--neon-cyan) !important;
+  background: rgba(0, 242, 254, 0.05) !important;
+}
+
+/* Accordions */
+.label-wrap {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border-radius: 8px !important;
+}
+
+/* Dataframe styling */
+.dataframe {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #070a12;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}

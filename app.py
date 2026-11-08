@@ -1,4 +1,3 @@
-
 import os
 import io
 import time
@@ -44,22 +43,22 @@ if css_path.exists():
 # Helper to format metric HTML cards
 def render_metric_cards(total: int, buys: int, holds: int, sells: int) -> str:
     return f"""
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 12px 0;">
-      <div class="stat-card">
-        <div class="stat-value">{total}</div>
-        <div class="stat-label">Total Stocks Scanned</div>
+    <div class="metrics-grid">
+      <div class="kpi-card kpi-total">
+        <div class="kpi-label"><span>Total Scanned</span> <span>🔍</span></div>
+        <div class="kpi-val">{total}</div>
       </div>
-      <div class="stat-card" style="border-color: rgba(16, 185, 129, 0.4);">
-        <div class="stat-value" style="color: #10b981;">{buys}</div>
-        <div class="stat-label" style="color: #34d399;">Buy Watch Signals</div>
+      <div class="kpi-card kpi-buy">
+        <div class="kpi-label"><span>Buy Signals</span> <span>▲</span></div>
+        <div class="kpi-val">{buys}</div>
       </div>
-      <div class="stat-card" style="border-color: rgba(245, 158, 11, 0.4);">
-        <div class="stat-value" style="color: #f59e0b;">{holds}</div>
-        <div class="stat-label" style="color: #fbbf24;">Hold / Wait Signals</div>
+      <div class="kpi-card kpi-hold">
+        <div class="kpi-label"><span>Hold / Wait</span> <span>◆</span></div>
+        <div class="kpi-val">{holds}</div>
       </div>
-      <div class="stat-card" style="border-color: rgba(239, 68, 68, 0.4);">
-        <div class="stat-value" style="color: #ef4444;">{sells}</div>
-        <div class="stat-label" style="color: #f87171;">Sell Watch Signals</div>
+      <div class="kpi-card kpi-sell">
+        <div class="kpi-label"><span>Sell / Risk</span> <span>▼</span></div>
+        <div class="kpi-val">{sells}</div>
       </div>
     </div>
     """
@@ -68,11 +67,14 @@ def render_metric_cards(total: int, buys: int, holds: int, sells: int) -> str:
 def render_decision_badge(decision: str, score: int) -> str:
     if decision == "BUY WATCH":
         badge_cls = "badge-buy"
+        icon = "▲"
     elif decision == "SELL WATCH":
         badge_cls = "badge-sell"
+        icon = "▼"
     else:
         badge_cls = "badge-hold"
-    return f'<span class="{badge_cls}">Verdict: {decision} (Score: {score})</span>'
+        icon = "◆"
+    return f'<div style="margin: 12px 0;"><span class="{badge_cls}">{icon} VERDICT: {decision} &nbsp;|&nbsp; QUANT SCORE: {score}</span></div>'
 
 # Application callbacks
 def handle_source_change(source_choice: str):
@@ -231,20 +233,20 @@ def load_stock_chart(symbol: str):
 
     if tech:
         summary_md = f"""
-### Quantitative Technical Analysis: **{clean_sym}**
-- **Date**: {tech['date']}
-- **Latest Close**: ₹{tech['close']}
-- **SMA 50**: ₹{tech['SMA50']} | **SMA 200**: ₹{tech['SMA200']}
-- **14-Day RSI**: {tech['RSI14']} (Zone: {'Overbought' if tech['RSI14'] > 70 else 'Oversold' if tech['RSI14'] < 30 else 'Moderate / Neutral'})
-- **20-Session Return**: {tech['Return20D_pct']}%
-- **Quantitative Score**: **{tech['score']}**
-- **Recommendation**: **{tech['decision']}**
+### ⚡ Quantitative Indicator Profile: **{clean_sym}**
+- **Effective Date**: `{tech['date']}`
+- **Last Traded Close**: **₹{tech['close']}**
+- **50-Day Moving Average (SMA50)**: ₹{tech['SMA50']} | **200-Day Moving Average (SMA200)**: ₹{tech['SMA200']}
+- **14-Period Wilder RSI**: **{tech['RSI14']}** *(Zone: {'🔥 Overbought (>70)' if tech['RSI14'] > 70 else '❄️ Oversold (<30)' if tech['RSI14'] < 30 else '✨ Optimal Accumulation Zone (30-70)'})*
+- **Trailing 20-Day Return**: **{tech['Return20D_pct']}%**
+- **Composite Score**: **{tech['score']}**
+- **Action Recommendation**: **{tech['decision']}**
 
-**Bullish Reasons**:
-{tech['reasons'] if tech['reasons'] else 'None identified'}
+#### 🟢 Bullish Rationale:
+{tech['reasons'] if tech['reasons'] else '*No specific bullish triggers registered.*'}
 
-**Bearish / Risk Factors**:
-{tech['risks'] if tech['risks'] else 'None identified'}
+#### 🔴 Bearish / Risk Factors:
+{tech['risks'] if tech['risks'] else '*No downside risks flagged.*'}
 """
         badge_html = render_decision_badge(tech['decision'], tech['score'])
     else:
@@ -297,7 +299,7 @@ def load_stock_deepdive_and_ai(symbol: str, custom_query: str):
             t = item.get("title", "")
             u = item.get("url", "#")
             c = item.get("content", "")
-            news_items.append(f"- **[{t}]({u})**: {c}")
+            news_items.append(f"- **[{t}]({u})**\n  {c}")
         news_html = "\n\n".join(news_items)
     else:
         news_html = "No real-time web news articles retrieved."
@@ -341,26 +343,47 @@ def test_api_credentials(f_key: str, t_key: str, tav_key: str, g_key: str):
     r_gemini = ai.check_gemini_health(g_key)
 
     res = f"""
-### API Diagnostic Results:
-- **Finnhub**: {'✅ ' + r_fin['message'] if r_fin['status'] == 'ok' else '⚠️ ' + r_fin['message']}
-- **Twelve Data**: {'✅ ' + r_twelve['message'] if r_twelve['status'] == 'ok' else '⚠️ ' + r_twelve['message']}
+### ⚡ External API Engine Diagnostics:
+- **Finnhub Market Data**: {'✅ ' + r_fin['message'] if r_fin['status'] == 'ok' else '⚠️ ' + r_fin['message']}
+- **Twelve Data Engine**: {'✅ ' + r_twelve['message'] if r_twelve['status'] == 'ok' else '⚠️ ' + r_twelve['message']}
 - **Tavily Web Search**: {'✅ ' + r_tavily['message'] if r_tavily['status'] == 'ok' else '⚠️ ' + r_tavily['message']}
 - **Google Gemini ({GEMINI_MODEL})**: {'✅ ' + r_gemini['message'] if r_gemini['status'] == 'ok' else '⚠️ ' + r_gemini['message']}
 """
     return res
 
 def create_app():
-    # Build Gradio UI
-    with gr.Blocks(title="Antigravity Indian Stock Advisor", analytics_enabled=False) as demo:
+    # Build Modern Dark Cyber Theme
+    cyber_theme = gr.themes.Soft(
+        primary_hue="cyan",
+        secondary_hue="indigo",
+        neutral_hue="slate",
+        font=[gr.themes.GoogleFont("Plus Jakarta Sans"), "sans-serif"]
+    ).set(
+        body_background_fill="#070a12",
+        body_background_fill_dark="#070a12",
+        block_background_fill="#0c1220",
+        block_background_fill_dark="#0c1220",
+        block_border_width="1px",
+        block_border_color="rgba(56, 189, 248, 0.15)",
+        block_border_color_dark="rgba(56, 189, 248, 0.15)"
+    )
 
-        # Header Banne
+    with gr.Blocks(title="AI for Finance | Indian Stock Terminal") as demo:
+
+        # Header Banner
         gr.HTML(
             """
-            <div class="header-banner">
-              <h1 class="header-title">📈 Indian Stock Advisor & AI Research Terminal</h1>
-              <p class="header-subtitle">
-                Quantitative Momentum & Trend Screener (SMA50, SMA200, Wilder's RSI-14, 20D Return) 
-                coupled with Google Gemini 2.5 Flash and Tavily Real-Time Web Intelligence.
+            <div class="terminal-header">
+              <div class="terminal-pill-row">
+                <span class="terminal-pill live"><span class="dot"></span> NSE RADAR LIVE</span>
+                <span class="terminal-pill">QUANT ALGO V2.4</span>
+                <span class="terminal-pill">GEMINI 2.5 FLASH</span>
+                <span class="terminal-pill">TAVILY MARKET INTELLIGENCE</span>
+              </div>
+              <h1 class="terminal-title">⚡ AI for Finance: Indian Stock Screener & Research Terminal</h1>
+              <p class="terminal-subtitle">
+                High-Frequency Quantitative Momentum Engine (Dual SMA 50/200, Wilder's RSI-14, 20-Day Performance)
+                fused with real-time news intelligence and Google Gemini 2.5 Flash institutional memorandums.
               </p>
             </div>
             """
@@ -369,7 +392,7 @@ def create_app():
         with gr.Tabs() as tabs:
 
             # ---------------- TAB 1: SCREENER & SCANNER ----------------
-            with gr.Tab("📊 Stock Screener & Quantitative Scanner", id="tab_screener"):
+            with gr.Tab("🎯 Quantitative Screener & Radar", id="tab_screener"):
                 with gr.Row():
                     with gr.Column(scale=3):
                         source_choice = gr.Radio(
@@ -426,8 +449,8 @@ def create_app():
                             )
 
                 with gr.Row():
-                    btn_scan = gr.Button("🚀 Run Download & Quantitative Scan", variant="primary", scale=2)
-                    btn_rescan = gr.Button("🔄 Re-Scan Local Database", variant="secondary", scale=1)
+                    btn_scan = gr.Button("⚡ Run Download & Quantitative Scan", elem_classes=["btn-scan-primary"], scale=2)
+                    btn_rescan = gr.Button("🔄 Re-Scan Local Database", elem_classes=["btn-rescan-secondary"], scale=1)
 
                 status_banner = gr.Markdown("Ready to scan securities.")
                 metrics_html = gr.HTML(render_metric_cards(0, 0, 0, 0))
@@ -457,30 +480,51 @@ def create_app():
                     download_scan_csv = gr.File(label="Export Scan Results CSV")
 
             # ---------------- TAB 2: INTERACTIVE CHARTS & TECHNICAL DEEP DIVE ----------------
-            with gr.Tab("📈 Interactive Charts & Technical Deep-Dive", id="tab_chart"):
+            with gr.Tab("📈 High-Precision Technical Charts", id="tab_chart"):
+                gr.Markdown("⚡ **Quick-Launch Active Bluechips:**")
+                with gr.Row():
+                    btn_q_rel = gr.Button("RELIANCE", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_q_tcs = gr.Button("TCS", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_q_infy = gr.Button("INFY", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_q_hdfc = gr.Button("HDFCBANK", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_q_tata = gr.Button("TATAMOTORS", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_q_bpcl = gr.Button("BPCL", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_q_sbin = gr.Button("SBIN", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_q_itc = gr.Button("ITC", elem_classes=["quick-ticker-btn"], size="sm")
+
                 with gr.Row():
                     selected_symbol_dropdown = gr.Dropdown(
                         choices=[],
                         value=None,
                         label="Select Scanned Stock",
                         allow_custom_value=True,
-                        info="Choose from scan results or type any NSE symbol (e.g. RELIANCE, TCS)"
+                        info="Choose from scan results or type any NSE symbol (e.g. RELIANCE, TCS)",
+                        scale=3
                     )
-                    btn_load_chart = gr.Button("📊 Render Technical Chart", variant="primary")
+                    btn_load_chart = gr.Button("📊 Render Interactive Chart", elem_classes=["btn-chart-amber"], scale=1)
 
                 badge_box = gr.HTML("")
                 chart_plot = gr.Plot(label="Price Action, Volume & 14-Day Wilder RSI")
                 stock_summary_md = gr.Markdown("Select a stock to view technical indicators.")
 
             # ---------------- TAB 3: GEMINI AI ADVISOR ----------------
-            with gr.Tab("🧠 Gemini AI Stock Advisor & Research Analyst", id="tab_ai"):
+            with gr.Tab("🧠 Gemini 2.5 Institutional Research", id="tab_ai"):
                 gr.Markdown(
                     """
                     ### Institutional AI Equity Research Synthesis
-                    Fuses your quantitative screener signals (SMA50, SMA200, RSI, 20D Return) with real-time news catalysts 
-                    (via **Tavily**) and **Google Gemini 2.5 Flash** to generate an institutional investment memorandum.
+                    Fuses quantitative screener signals (SMA50, SMA200, RSI, 20D Return) with real-time news catalysts 
+                    (via **Tavily**) and **Google Gemini 2.5 Flash** to generate a Wall-Street-grade investment memorandum.
                     """
                 )
+                gr.Markdown("⚡ **Quick-Select Stock for AI Memo:**")
+                with gr.Row():
+                    btn_ai_rel = gr.Button("RELIANCE", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_ai_tcs = gr.Button("TCS", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_ai_infy = gr.Button("INFY", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_ai_hdfc = gr.Button("HDFCBANK", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_ai_tata = gr.Button("TATAMOTORS", elem_classes=["quick-ticker-btn"], size="sm")
+                    btn_ai_bpcl = gr.Button("BPCL", elem_classes=["quick-ticker-btn"], size="sm")
+
                 with gr.Row():
                     ai_symbol_input = gr.Textbox(
                         label="Stock Symbol",
@@ -488,21 +532,21 @@ def create_app():
                         scale=1
                     )
                     ai_query_input = gr.Textbox(
-                        label="Specific Analytical Question (Optional)",
-                        placeholder="e.g. What is the swing trade invalidation level? How do quarterly earnings affect this setup?",
+                        label="Analytical Focus / Question (Optional)",
+                        placeholder="e.g. Invalidation stop loss level? Earnings impact on technical setup?",
                         scale=3
                     )
-                    btn_generate_ai = gr.Button("🤖 Generate Institutional Report", variant="primary", scale=1)
+                    btn_generate_ai = gr.Button("🤖 Generate Institutional Memo", elem_classes=["btn-ai-emerald"], scale=1)
 
                 with gr.Row():
                     with gr.Column(scale=3):
-                        ai_report_output = gr.Markdown("Click 'Generate Institutional Report' to produce analysis.")
+                        ai_report_output = gr.Markdown("Click 'Generate Institutional Memo' to produce analysis.")
                     with gr.Column(scale=2):
                         with gr.Accordion("📰 Real-Time Web Intelligence Catalysts (Tavily)", open=True):
                             ai_news_output = gr.Markdown("Live news catalysts will appear here.")
 
             # ---------------- TAB 4: ELIGIBLE SECURITIES BROWSER ----------------
-            with gr.Tab("📁 Eligible Securities Universe Browser", id="tab_eligible"):
+            with gr.Tab("📁 Eligible Securities Universe", id="tab_eligible"):
                 gr.Markdown(
                     """
                     ### Official NSE Eligible Security Documents
@@ -533,11 +577,11 @@ def create_app():
                 )
 
             # ---------------- TAB 5: DATABASE & DOWNLOADS ----------------
-            with gr.Tab("🗄️ Database & Export Center", id="tab_db"):
+            with gr.Tab("💾 Database Coverage & Data Hub", id="tab_db"):
                 gr.Markdown("### SQLite Database Coverage & Download Logs")
                 with gr.Row():
-                    btn_refresh_db = gr.Button("🔄 Refresh Database Status", variant="secondary")
-                    btn_export_all = gr.Button("📥 Generate All Export Files", variant="primary")
+                    btn_refresh_db = gr.Button("🔄 Refresh Database Status", elem_classes=["btn-rescan-secondary"])
+                    btn_export_all = gr.Button("📥 Generate All Export Files", elem_classes=["btn-scan-primary"])
 
                 with gr.Row():
                     file_daily = gr.File(label="Daily Prices CSV")
@@ -552,11 +596,11 @@ def create_app():
                         failures_df = gr.DataFrame(label="Database Table: download_log (Failures)")
 
                 with gr.Accordion("⚠️ Database Maintenance", open=False):
-                    btn_reset_db = gr.Button("🗑️ Clear / Reset SQLite Database", variant="stop")
+                    btn_reset_db = gr.Button("🗑️ Clear / Reset SQLite Database", elem_classes=["btn-reset-danger"])
                     reset_status = gr.Markdown("")
 
             # ---------------- TAB 6: SETTINGS & API CONFIGURATION ----------------
-            with gr.Tab("⚙️ Settings & API Configuration", id="tab_settings"):
+            with gr.Tab("⚡ Diagnostics & API Engine", id="tab_settings"):
                 gr.Markdown(
                     """
                     ### API Keys & Engine Configuration
@@ -586,7 +630,7 @@ def create_app():
                         type="password"
                     )
 
-                btn_test_apis = gr.Button("🔍 Test All API Connections", variant="primary")
+                btn_test_apis = gr.Button("🔍 Test All API Connections", elem_classes=["btn-rescan-secondary"])
                 api_status_md = gr.Markdown("Click above to verify API connectivity.")
 
         # Reactive Bindings
@@ -679,12 +723,48 @@ def create_app():
             outputs=[chart_plot, stock_summary_md, badge_box]
         )
 
+        # Quick ticker bindings for charts
+        for btn, sym in [
+            (btn_q_rel, "RELIANCE"),
+            (btn_q_tcs, "TCS"),
+            (btn_q_infy, "INFY"),
+            (btn_q_hdfc, "HDFCBANK"),
+            (btn_q_tata, "TATAMOTORS"),
+            (btn_q_bpcl, "BPCL"),
+            (btn_q_sbin, "SBIN"),
+            (btn_q_itc, "ITC")
+        ]:
+            def make_handler(s):
+                return lambda: (s, *load_stock_chart(s))
+            btn.click(
+                fn=make_handler(sym),
+                inputs=[],
+                outputs=[selected_symbol_dropdown, chart_plot, stock_summary_md, badge_box]
+            )
+
         # 7. Generate Gemini AI Report
         btn_generate_ai.click(
             fn=load_stock_deepdive_and_ai,
             inputs=[ai_symbol_input, ai_query_input],
             outputs=[ai_report_output, ai_news_output]
         )
+
+        # Quick ticker bindings for AI Advisor
+        for btn, sym in [
+            (btn_ai_rel, "RELIANCE"),
+            (btn_ai_tcs, "TCS"),
+            (btn_ai_infy, "INFY"),
+            (btn_ai_hdfc, "HDFCBANK"),
+            (btn_ai_tata, "TATAMOTORS"),
+            (btn_ai_bpcl, "BPCL")
+        ]:
+            def make_ai_handler(s):
+                return lambda: (s, *load_stock_deepdive_and_ai(s, ""))
+            btn.click(
+                fn=make_ai_handler(sym),
+                inputs=[],
+                outputs=[ai_symbol_input, ai_report_output, ai_news_output]
+            )
 
         # 8. Browse Eligible Documents
         doc_selector.change(
@@ -738,13 +818,27 @@ def create_app():
 
     return demo
 
+# Global cyber theme definition
+cyber_theme = gr.themes.Soft(
+    primary_hue="cyan",
+    secondary_hue="indigo",
+    neutral_hue="slate",
+    font=[gr.themes.GoogleFont("Plus Jakarta Sans"), "sans-serif"]
+).set(
+    body_background_fill="#070a12",
+    body_background_fill_dark="#070a12",
+    block_background_fill="#0c1220",
+    block_background_fill_dark="#0c1220",
+    block_border_width="1px",
+    block_border_color="rgba(56, 189, 248, 0.15)",
+    block_border_color_dark="rgba(56, 189, 248, 0.15)"
+)
+
 demo = create_app()
 
 if __name__ == "__main__":
-    # In cloud environments (Render, Hugging Face, Docker), PORT is provided via environment
     port_env = os.getenv("PORT")
     port = int(port_env) if port_env else None
-    # Bind to 0.0.0.0 for external ingress routing
     server_name = os.getenv("GRADIO_SERVER_NAME", "0.0.0.0")
     print(f"Starting Indian Stock Advisor on {server_name}:{port or 'dynamic'} ...", flush=True)
     demo.queue()
@@ -752,13 +846,14 @@ if __name__ == "__main__":
         demo.launch(
             server_name=server_name,
             server_port=port,
+            theme=cyber_theme,
             css=custom_css,
             show_error=True
         )
     except OSError:
-        # Graceful fallback if specified local port is temporarily in TIME_WAIT
         demo.launch(
             server_name=server_name,
+            theme=cyber_theme,
             css=custom_css,
             show_error=True
         )

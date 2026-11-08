@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 *.so
 .pytest_cache/
+.venv/
+venv/
+env/
 
 # Environment Variables & Secrets (CRITICAL)
 .env
